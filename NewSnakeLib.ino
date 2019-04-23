@@ -1,14 +1,9 @@
 #include "MTboard.h"
-
-
 #define LONG_MAX 10  //maxima longitud de la serpiente
-#define VMAX 650.0 //Velocidad máxima de la serpiente
+#define VMAX 650.0 //Velocidad máxima de la serpiente mSg entre pasos
 #define VMIN 180.0 //velocidad mínima
 #define STEPVEL (VMAX-VMIN)/LONG_MAX
 #define LED_ON 1
-
-
-
 
 MTboard mtBoard;
 struct {
@@ -22,30 +17,22 @@ int intervaloFrutaActual;
 char longActual = 1;
 int velocidad = VMAX;//250
 
-
-
 void setup() {
 
-  Serial.begin(115000);
+  Serial.begin(57600);
   randomSeed(analogRead(4));
-  mtBoard.fijaLed(IZQUIERDA);
-  mtBoard.fijaLed(DERECHA);
   iniJuego();
   delay(3000);
-  //mtBoard.textoScroll("Bienvenido a ArduGames SNAKE tienes que comer 15 manzanas");
+  mtBoard.textoScroll("Bienvenido a ArduGames SNAKE tienes que comer 15 manzanas");
   mtBoard.drawBitmap(ALEGRE);
   delay(1000);
-  
+
 
 }
 
 void loop() {
-
-  //LEER 250MSG
-
   long tiempo = millis();
-  //mtBoard.atiendeSerie();
-  //int n = mtBoard.leePulsador();
+  mtBoard.atiendeSerie();
   byte k = 255;
   while (((millis() - tiempo) < velocidad) && (((k = mtBoard.leePulsador()) == 255))); //espera a pulsar o timeout
   if (k != 255) // si es porque se ha pulsado
@@ -65,19 +52,13 @@ void loop() {
         direccion = (k == DERECHA) ? Down : Up ;
         break;
     };
-  mtBoard.fijaLed(IZQUIERDA);
-  mtBoard.fijaLed(DERECHA);
   mueve();
   dibujaSerpiente();
   frutas();
-  //int resto = velocidad - (millis() - tiempo);
-  //delay(10);
-  //tiempo = millis(); //espera a soltar
-  //Serial.println(millis());
-  if(k!=255)delay(velocidad);
-  //while ((((millis() - tiempo) < VMIN))); //&& (mtBoard.leePulsador()) != 255)); //espera dejar pulsar
-  //Serial.println(millis());
-  //delay(10);
+  delay(10);
+  tiempo = millis(); //espera a soltar
+  while ((((millis() - tiempo) < VMIN) && (mtBoard.leePulsador()) != 255)); //espera dejar pulsar
+  delay(10);
 }
 
 void iniJuego() //Comienzo del juego
