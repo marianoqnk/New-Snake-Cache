@@ -19,10 +19,9 @@ int velocidad = VMAX;//250
 
 void setup() {
 
-  Serial.begin(57600);
+  mtBoard.ini();
   randomSeed(analogRead(4));
   iniJuego();
-  delay(3000);
   mtBoard.textoScroll("Bienvenido a ArduGames SNAKE tienes que comer 15 manzanas");
   mtBoard.drawBitmap(ALEGRE);
   delay(1000);
